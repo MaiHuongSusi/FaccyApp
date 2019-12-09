@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:padding="5dp"
+    android:layout_gravity="center_horizontal|center_vertical"
+    android:background="@drawable/bg_des">
+
+    <TextView
+        android:id="@+id/txtClose"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:text="X"
+        android:textColor="#ffffff"
+        android:gravity="center"
+        android:layout_gravity="end"
+        android:textStyle="bold"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imageView"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:src="@drawable/idea"
+            app:civ_border_color="#47008F"
+            app:civ_border_width="2dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="DESCRIPTION"
+            android:textSize="20dp"
+            android:textColor="#ffffff"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:orientation="vertical"
+        android:background="#F9F7E8"
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="10dp">
+
+            <ScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/textDes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="A typical pig has a large head with a long snout that is strengthened by a special prenasal bone and by a disk of cartilage at the tip.[8] The snout is used to dig into the soil to find food and is a very acute sense organ. "
+                        android:textAlignment="inherit"
+                        android:textColor="#371722" />
+                </LinearLayout>
+            </ScrollView>
+
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp">
+        <ImageView
+            android:id="@+id/imgBtnSpeaker"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="10dp"
+            android:src="@drawable/speaker"
+            android:background="@drawable/buttonshape" />
+    </LinearLayout>
+
+</LinearLayout>

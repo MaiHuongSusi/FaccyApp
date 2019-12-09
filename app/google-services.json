@@ -1,0 +1,77 @@
+{
+  "project_info": {
+    "project_number": "835864874416",
+    "firebase_url": "https://tensorflowproject-a5f1c.firebaseio.com",
+    "project_id": "tensorflowproject-a5f1c",
+    "storage_bucket": "tensorflowproject-a5f1c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:835864874416:android:e1f79dcdd0aa5167a5da75",
+        "android_client_info": {
+          "package_name": "com.mindorks.faccyapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "835864874416-99pgslj9sn6u3bj0d2udng2r663aj5rr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwMVtMonD3vRCXZDk_U9QgsG00bw4ScqA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "835864874416-99pgslj9sn6u3bj0d2udng2r663aj5rr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:835864874416:android:67949201244cc97ea5da75",
+        "android_client_info": {
+          "package_name": "com.mindorks.tensorflowexample"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "835864874416-ibomf1nf8rhlt1tgg27gvjpa53jn0lkn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mindorks.tensorflowexample",
+            "certificate_hash": "5edf4b2fa1f3a785f70347b050b3728cb2c56d5b"
+          }
+        },
+        {
+          "client_id": "835864874416-99pgslj9sn6u3bj0d2udng2r663aj5rr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwMVtMonD3vRCXZDk_U9QgsG00bw4ScqA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "835864874416-99pgslj9sn6u3bj0d2udng2r663aj5rr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.mindorks.faccyapp.AutoFitTextureView
+        android:id="@+id/texture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+
+    <GridLayout
+        android:id="@+id/idGrid"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:columnCount="7"
+        android:rowCount="1"
+        android:layout_alignParentTop="true"
+        android:background="#363636"
+        android:paddingLeft="5dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp">
+        <LinearLayout
+            android:layout_width="175dp"
+            android:layout_height="wrap_content"
+            android:layout_columnSpan="3"
+            android:background="@drawable/buttonshape"
+            android:layout_gravity="left"
+            android:layout_margin="10dp">
+            <TextView
+                android:id="@+id/nameResult"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Not Classify"
+                android:textColor="@android:color/black" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/imageSpeaker"
+            android:layout_marginTop="15dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_columnSpan="1"
+            android:background="@drawable/buttonshape"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:layout_margin="10dp">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/speaker"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/imageDetail"
+            android:layout_marginTop="15dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_columnSpan="1"
+            android:background="@drawable/buttonshape"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:layout_margin="10dp">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/detail"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/imageVideo"
+            android:layout_marginTop="15dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_columnSpan="1"
+            android:background="@drawable/buttonshape"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:layout_margin="10dp">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/video"/>
+        </LinearLayout>
+    </GridLayout>
+
+</RelativeLayout>

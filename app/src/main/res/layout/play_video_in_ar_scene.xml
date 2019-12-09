@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PlayVideoInArScene">
+
+    <fragment
+        android:id="@+id/arFragment"
+        android:name="com.google.ar.sceneform.ux.ArFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <LinearLayout
+        android:id="@+id/btnBack"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        android:background="#BEBEBE">
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/back"/>
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:textColor="#636363"
+            android:textSize="20dp"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/record"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="162dp"
+        android:layout_marginBottom="31dp"
+        android:background="@drawable/btn_record" />
+</RelativeLayout>
