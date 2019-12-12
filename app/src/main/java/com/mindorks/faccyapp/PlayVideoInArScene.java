@@ -1,21 +1,30 @@
 package com.mindorks.faccyapp;
 
 import android.app.ActivityManager;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.CamcorderProfile;
 import android.media.MediaPlayer;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,6 +49,8 @@ public class PlayVideoInArScene extends AppCompatActivity {
     private LinearLayout btnBack;
     private Button record;
     private VideoRecorder videoRecorder;
+    Dialog dialog;
+    VideoView videoView;
 
     @Nullable
     private ModelRenderable videoRenderable;
@@ -63,6 +74,8 @@ public class PlayVideoInArScene extends AppCompatActivity {
         }
 
         setContentView(R.layout.play_video_in_ar_scene);
+        videoView = findViewById(R.id.videoView);
+
         btnBack = findViewById(R.id.btnBack);
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,8 +175,78 @@ public class PlayVideoInArScene extends AppCompatActivity {
                     Toast.makeText(PlayVideoInArScene.this, "Recording", Toast.LENGTH_SHORT).show();
                 } else {
                     record.setBackgroundResource(R.drawable.btn_record);
+                    viewVideoRecord();
                     Toast.makeText(PlayVideoInArScene.this, "Saved video to gallery.", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+    }
+    private void viewVideoRecord() {
+        videoView.setVisibility(View.VISIBLE);
+
+        String pathVideo = videoRecorder.getVideoPath().getPath();
+        Bitmap thumb = ThumbnailUtils.createVideoThumbnail(pathVideo,
+                MediaStore.Images.Thumbnails.MINI_KIND);
+        BitmapDrawable bitmapDrawable = new BitmapDrawable(thumb);
+        videoView.setBackgroundDrawable(bitmapDrawable);
+        Animation bounceAni;
+        bounceAni = AnimationUtils.loadAnimation(getApplicationContext(),
+                R.anim.bounce);
+        videoView.startAnimation(bounceAni);
+        bounceAni.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                videoView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+
+        if (videoView.getVisibility() == View.VISIBLE) {
+            videoView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showDialogViewVideo(pathVideo);
+                }
+            });
+        }
+    }
+
+    public void showDialogViewVideo(String pathVideo) {
+        dialog = new Dialog(PlayVideoInArScene.this);
+        dialog.setContentView(R.layout.video_record_screenshot);
+        dialog.show();
+        VideoView videoView = dialog.findViewById(R.id.videoView);
+        Bitmap thumb = ThumbnailUtils.createVideoThumbnail(pathVideo,
+                MediaStore.Images.Thumbnails.MINI_KIND);
+        BitmapDrawable bitmapDrawable = new BitmapDrawable(thumb);
+        videoView.setBackgroundDrawable(bitmapDrawable);
+
+        Button btnPlay = dialog.findViewById(R.id.btnPlay);
+        btnPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+                videoView.setVisibility(View.GONE);
+                mediaPlayer.pause();
+                Intent intent = new Intent(PlayVideoInArScene.this, ViewVideoRecord.class);
+                intent.putExtra("pathVideo", pathVideo);
+                startActivity(intent);
+            }
+        });
+
+        TextView txtClose;
+        txtClose = (TextView) dialog.findViewById(R.id.txtClose);
+        txtClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
             }
         });
     }

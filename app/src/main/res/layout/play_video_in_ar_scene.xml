@@ -30,6 +30,17 @@
             android:textColor="#636363"
             android:textSize="20dp"/>
     </LinearLayout>
+    <VideoView
+        android:id="@+id/videoView"
+        android:layout_width="100dp"
+        android:layout_height="150dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="129dp"
+        android:layout_marginEnd="10dp"
+        android:visibility="gone"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
         android:id="@+id/record"
