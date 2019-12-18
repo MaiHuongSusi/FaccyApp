@@ -289,7 +289,7 @@ public class ThreeDActivity extends AppCompatActivity {
 
                 mImages.add(R.drawable.zebra);
                 mRaws.add(R.raw.zebra);
-                mNames.add("sheep");
+                mNames.add("zebra");
 
                 mImages.add(R.drawable.chicken);
                 mRaws.add(R.raw.chicken);
@@ -338,76 +338,6 @@ public class ThreeDActivity extends AppCompatActivity {
                 mImages.add(R.drawable.tomato);
                 mRaws.add(R.raw.tomato);
                 mNames.add("tomato");
-
-                break;
-
-            case "Home":
-                mImages.add(R.drawable.house);
-                mRaws.add(R.raw.house);
-                mNames.add("house");
-
-                mImages.add(R.drawable.modernhouse);
-                mRaws.add(R.raw.modernhouse);
-                mNames.add("modernhouse");
-
-                mImages.add(R.drawable.livingroom);
-                mRaws.add(R.raw.livingroom);
-                mNames.add("livingroom");
-
-                mImages.add(R.drawable.couch);
-                mRaws.add(R.raw.couch);
-                mNames.add("couch");
-
-                mImages.add(R.drawable.tv);
-                mRaws.add(R.raw.tv);
-                mNames.add("tv");
-
-                mImages.add(R.drawable.remotecontrol);
-                mRaws.add(R.raw.remotecontrol);
-                mNames.add("remote control");
-
-                mImages.add(R.drawable.strawberry);
-                mRaws.add(R.raw.strawberry);
-                mNames.add("strawberry");
-
-                mImages.add(R.drawable.table);
-                mRaws.add(R.raw.table);
-                mNames.add("table");
-
-                break;
-
-            case "Person":
-                mImages.add(R.drawable.breifcase);
-                mRaws.add(R.raw.breifcase);
-                mNames.add("breifcase");
-
-                mImages.add(R.drawable.cap);
-                mRaws.add(R.raw.cap);
-                mNames.add("cap");
-
-                mImages.add(R.drawable.flipflops);
-                mRaws.add(R.raw.flipflops);
-                mNames.add("flipflops");
-
-                mImages.add(R.drawable.headphones);
-                mRaws.add(R.raw.headphones);
-                mNames.add("headphones");
-
-                mImages.add(R.drawable.purse);
-                mRaws.add(R.raw.purse);
-                mNames.add("purse");
-
-                mImages.add(R.drawable.sandals);
-                mRaws.add(R.raw.sandals);
-                mNames.add("sandals");
-
-                mImages.add(R.drawable.sneakers);
-                mRaws.add(R.raw.sneakers);
-                mNames.add("sneakers");
-
-                mImages.add(R.drawable.tshirt);
-                mRaws.add(R.raw.tshirt);
-                mNames.add("tshirt");
 
                 break;
 

@@ -4,15 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class ListTopic3DActivity extends AppCompatActivity {
-    ImageView ocean, home, person, animal, plant, vehicle;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -20,8 +17,8 @@ public class ListTopic3DActivity extends AppCompatActivity {
         setContentView(R.layout.list_topic);
 
         final ListView list = findViewById(R.id.listView);
-        String[] arrayName = {"Ocean", "Animal", "Plant", "Home", "Person", "Vehicle"};
-        Integer[] arrayImg = {R.drawable.ocean, R.drawable.animal, R.drawable.plant, R.drawable.home, R.drawable.person, R.drawable.vehicle};
+        String[] arrayName = {"Ocean", "Animal", "Plant", "Vehicle"};
+        Integer[] arrayImg = {R.drawable.ocean, R.drawable.animal, R.drawable.plant, R.drawable.vehicle};
 
         CustomListView customListView = new CustomListView(this, arrayName, arrayImg);
 

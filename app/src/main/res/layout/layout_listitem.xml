@@ -25,6 +25,4 @@
                 android:textColor="#ffffff"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-
-
 </RelativeLayout>

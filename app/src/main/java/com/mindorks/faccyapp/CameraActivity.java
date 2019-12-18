@@ -1,35 +1,18 @@
-/*
- * Copyright 2014 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.mindorks.faccyapp;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.media.Image;
 import android.media.ImageReader;
+import android.net.ConnectivityManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -69,11 +52,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class CameraActivity extends AppCompatActivity implements ImageReader.OnImageAvailableListener, CameraFragment.ConnectionCallback, TextToSpeech.OnInitListener {
 
     public static final String TAG = "CameraActivity";
-
-    private static final int PERMISSIONS_REQUEST = 1;
-
-    private static final String PERMISSION_CAMERA = Manifest.permission.CAMERA;
-    private static final String PERMISSION_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
     private static final int INPUT_SIZE = 224;
     private static final int IMAGE_MEAN = 117;
     private static final float IMAGE_STD = 1;
@@ -98,7 +76,6 @@ public class CameraActivity extends AppCompatActivity implements ImageReader.OnI
     private Matrix frameToCropTransform;
     private Matrix cropToFrameTransform;
     private TextView resultsView;
-    //  private BorderedText borderedText;
     private long lastProcessingTimeMs;
     private TensorFlowImageClassifier2 classifier;
     private Executor executor = Executors.newSingleThreadExecutor();
@@ -116,14 +93,11 @@ public class CameraActivity extends AppCompatActivity implements ImageReader.OnI
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_camera);
-        container = (RelativeLayout) findViewById(R.id.container);
+        container = findViewById(R.id.container);
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
-        if (hasPermission()) {
-            setFragment();
-        } else {
-            requestPermission();
-        }
+        setFragment();
+
         dialog = new Dialog(this);
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
@@ -133,45 +107,31 @@ public class CameraActivity extends AppCompatActivity implements ImageReader.OnI
         });
     }
 
-    private boolean hasPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return checkSelfPermission(PERMISSION_CAMERA) == PackageManager.PERMISSION_GRANTED && checkSelfPermission(PERMISSION_STORAGE) == PackageManager.PERMISSION_GRANTED;
-        } else {
-            return true;
-        }
-    }
-
-    private void requestPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (shouldShowRequestPermissionRationale(PERMISSION_CAMERA) || shouldShowRequestPermissionRationale(PERMISSION_STORAGE)) {
-                Toast.makeText(CameraActivity.this, "Camera and storage permission are required for this app", Toast.LENGTH_LONG).show();
-            }
-            requestPermissions(new String[]{PERMISSION_CAMERA, PERMISSION_STORAGE}, PERMISSIONS_REQUEST);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(
-            final int requestCode, final String[] permissions, final int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSIONS_REQUEST: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                        && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                    setFragment();
-                } else {
-                    requestPermission();
-                }
-            }
-        }
-    }
-
     protected void setFragment() {
         final Fragment fragment = new CameraFragment(this);
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.container, fragment)
                 .commit();
+    }
+
+    // Set up Text To Speech
+    @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+
+            int result = tts.setLanguage(Locale.ENGLISH);
+
+            if (result == TextToSpeech.LANG_MISSING_DATA
+                    || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.e("TTS", "This Language is not supported");
+            } else {
+                imageSpeaker.setEnabled(true);
+            }
+
+        } else {
+            Log.e("TTS", "Initilization Failed!");
+        }
     }
 
     @Override
@@ -214,8 +174,6 @@ public class CameraActivity extends AppCompatActivity implements ImageReader.OnI
     @Override
     public void onPreviewSizeChosen(final Size size, final int rotation) {
 
-        Log.d(TAG, "onPreviewSizeChosen");
-
         classifier = new TensorFlowImageClassifier2(getAssets(), MODEL_FILE, LABEL_FILE, INPUT_SIZE, IMAGE_MEAN, IMAGE_STD, INPUT_NAME, OUTPUT_NAME);
 
         resultsView = (TextView) findViewById(R.id.nameResult);
@@ -240,10 +198,22 @@ public class CameraActivity extends AppCompatActivity implements ImageReader.OnI
         imageVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showVideo();
+                if (isOnline()) {
+                    showVideo();
+                } else {
+                    Toast.makeText(CameraActivity.this, "Please connect internet to view video.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
+        setUpPreviewImage(size, rotation);
+    }
 
+    public boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnectedOrConnecting();
+    }
+
+    private void setUpPreviewImage(final Size size, final int rotation) {
         previewWidth = size.getWidth();
         previewHeight = size.getHeight();
 
@@ -266,8 +236,6 @@ public class CameraActivity extends AppCompatActivity implements ImageReader.OnI
         frameToCropTransform.invert(cropToFrameTransform);
 
         yuvBytes = new byte[3][];
-
-
     }
 
     private void showVideo() {
@@ -315,13 +283,11 @@ public class CameraActivity extends AppCompatActivity implements ImageReader.OnI
                 }
             }
         } catch (IOException e) {
-            //log the exception
         } finally {
             if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    //log the exception
                 }
             }
         }
@@ -455,23 +421,4 @@ public class CameraActivity extends AppCompatActivity implements ImageReader.OnI
             buffer.get(yuvBytes[i]);
         }
     }
-
-    @Override
-    public void onInit(int status) {
-        if (status == TextToSpeech.SUCCESS) {
-
-            int result = tts.setLanguage(Locale.ENGLISH);
-
-            if (result == TextToSpeech.LANG_MISSING_DATA
-                    || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                Log.e("TTS", "This Language is not supported");
-            } else {
-                imageSpeaker.setEnabled(true);
-            }
-
-        } else {
-            Log.e("TTS", "Initilization Failed!");
-        }
-    }
-
 }

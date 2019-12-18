@@ -18,8 +18,9 @@ package com.mindorks.faccyapp;
 
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
-import androidx.core.os.TraceCompat;
 import android.util.Log;
+
+import androidx.core.os.TraceCompat;
 
 import org.tensorflow.contrib.android.TensorFlowInferenceInterface;
 
@@ -31,10 +32,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Vector;
-
-/**
- * Created by amitshekhar on 06/03/17.
- */
 
 /**
  * A classifier specialized to label images using TensorFlow.

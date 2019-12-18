@@ -1,10 +1,10 @@
 package com.mindorks.faccyapp;
 
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
-import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,12 +14,20 @@ public class ViewVideoRecord extends AppCompatActivity {
     private int position = 0;
     private MediaController mediaController;
     String pathVideo;
-
+    private LinearLayout btnBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.play_video_record);
+
+        btnBack = findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         pathVideo = getIntent().getStringExtra("pathVideo");
 

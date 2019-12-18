@@ -15,7 +15,6 @@ public class CustomListView extends ArrayAdapter<String> {
     private Integer[] mImageId;
     private Activity mContext;
 
-
     public CustomListView(Activity mContext, String[] mName, Integer[] mImageId) {
         super(mContext, R.layout.list_topic, mName);
         this.mContext = mContext;

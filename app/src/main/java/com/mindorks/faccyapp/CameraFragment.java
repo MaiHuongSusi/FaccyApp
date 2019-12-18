@@ -22,7 +22,6 @@ import android.media.ImageReader;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import androidx.annotation.Nullable;
 import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.Surface;
@@ -30,6 +29,8 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -178,7 +179,7 @@ public class CameraFragment extends Fragment {
      * @return The optimal {@code Size}, or an arbitrary one if none were big enough
      */
     private static Size chooseOptimalSize(final Size[] choices, final int width, final int height) {
-        final int minSize = Math.max( Math.min(width, height), MINIMUM_PREVIEW_SIZE);
+        final int minSize = Math.max(Math.min(width, height), MINIMUM_PREVIEW_SIZE);
         final Size desiredSize = new Size(width, height);
 
         // Collect the supported resolutions that are at least as big as the preview Surface
@@ -262,25 +263,25 @@ public class CameraFragment extends Fragment {
 
     private void setUpCameraOutputs() {
         final Activity activity = getActivity();
-        final CameraManager manager = (CameraManager) activity.getSystemService( Context.CAMERA_SERVICE);
+        final CameraManager manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
         try {
             for (final String cameraId : manager.getCameraIdList()) {
                 final CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
 
                 // We don't use a front facing camera in this sample.
-                final Integer facing = characteristics.get( CameraCharacteristics.LENS_FACING);
+                final Integer facing = characteristics.get(CameraCharacteristics.LENS_FACING);
                 if (facing != null && facing == CameraCharacteristics.LENS_FACING_FRONT) {
                     continue;
                 }
 
                 final StreamConfigurationMap map =
-                        characteristics.get( CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+                        characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
 
                 if (map == null) {
                     continue;
                 }
 
-                sensorOrientation = characteristics.get( CameraCharacteristics.SENSOR_ORIENTATION);
+                sensorOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
                 previewSize = chooseOptimalSize(map.getOutputSizes(SurfaceTexture.class), inputSize.getWidth(), inputSize.getHeight());
 
                 // We fit the aspect ratio of TextureView to the size of preview we picked.
@@ -329,7 +330,7 @@ public class CameraFragment extends Fragment {
         setUpCameraOutputs();
         configureTransform(width, height);
         final Activity activity = getActivity();
-        final CameraManager manager = (CameraManager) activity.getSystemService( Context.CAMERA_SERVICE);
+        final CameraManager manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
         try {
             if (!cameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
                 throw new RuntimeException("Time out waiting to lock camera opening.");
@@ -403,7 +404,7 @@ public class CameraFragment extends Fragment {
             final Surface surface = new Surface(texture);
 
             // We set up a CaptureRequest.Builder with the output Surface.
-            previewRequestBuilder = cameraDevice.createCaptureRequest( CameraDevice.TEMPLATE_PREVIEW);
+            previewRequestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
             previewRequestBuilder.addTarget(surface);
 
             //LOGGER.i("Opening camera preview: " + previewSize.getWidth() + "x" + previewSize.getHeight());

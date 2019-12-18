@@ -1,10 +1,12 @@
 package com.mindorks.faccyapp;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -46,15 +48,11 @@ public class DirectoryActivity extends AppCompatActivity implements TextToSpeech
     private static final String INPUT_NAME = "input";
     private static final String OUTPUT_NAME = "output";
     private static final String MODEL_FILE = "file:///android_asset/tensorflow_inception_graph.pb";
-    private static final String LABEL_FILE =
-            "file:///android_asset/imagenet_comp_graph_label_strings.txt";
-
-
+    private static final String LABEL_FILE = "file:///android_asset/imagenet_comp_graph_label_strings.txt";
     private Classifier classifier;
     private Executor executor = Executors.newSingleThreadExecutor();
     private TextToSpeech tts;
     private LinearLayout imageSpeaker, btnDes, imageVideo;
-
     ImageView imageView;
     TextView nameResult;
     LinearLayout imageButton1, imageButton2, imageButton3;
@@ -82,6 +80,7 @@ public class DirectoryActivity extends AppCompatActivity implements TextToSpeech
         nameResult.setMovementMethod(new ScrollingMovementMethod());
         idGrid = (GridLayout) findViewById(R.id.idGrid);
         idGrid.setVisibility(idGrid.INVISIBLE);
+
         imageButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -108,7 +107,9 @@ public class DirectoryActivity extends AppCompatActivity implements TextToSpeech
                 startActivityForResult(intent, 123);
             }
         });
+
         initTensorFlowAndLoadModel();
+
         tts = new TextToSpeech(this, this);
         imageSpeaker = findViewById(R.id.imageSpeaker);
         nameResult = (TextView) findViewById(R.id.nameResult);
@@ -192,30 +193,39 @@ public class DirectoryActivity extends AppCompatActivity implements TextToSpeech
         imageVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (detail != "[Not Classify]" && detail != "Not Classify") {
-                    String codeObject;
-                    if (detail.contains(" ")) {
-                        codeObject = detail.substring(1, detail.indexOf(" ")).toLowerCase().concat("_").concat(detail.substring(detail.indexOf(" ") + 1, detail.indexOf("]")).toLowerCase());
-                    } else {
-                        codeObject = detail.substring(1, detail.indexOf("]")).toLowerCase();
+                if (isOnline()) {
+                    if (detail != "[Not Classify]" && detail != "Not Classify") {
+                        String codeObject;
+                        if (detail.contains(" ")) {
+                            codeObject = detail.substring(1, detail.indexOf(" ")).toLowerCase().concat("_").concat(detail.substring(detail.indexOf(" ") + 1, detail.indexOf("]")).toLowerCase());
+                        } else {
+                            codeObject = detail.substring(1, detail.indexOf("]")).toLowerCase();
+                        }
+                        mStorageRef.child(codeObject + "/" + codeObject + ".mp4").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                Intent intent = new Intent(DirectoryActivity.this, PlayVideoInArScene.class);
+                                intent.putExtra("object", detail);
+                                intent.putExtra("pathVideo", uri.toString());
+                                startActivity(intent);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(DirectoryActivity.this, "Fail to load video.", Toast.LENGTH_LONG).show();
+                            }
+                        });
                     }
-                    mStorageRef.child(codeObject + "/" + codeObject + ".mp4").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            Intent intent = new Intent(DirectoryActivity.this, PlayVideoInArScene.class);
-                            intent.putExtra("object", detail);
-                            intent.putExtra("pathVideo", uri.toString());
-                            startActivity(intent);
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(DirectoryActivity.this, "Fail to load video.", Toast.LENGTH_LONG).show();
-                        }
-                    });
+                } else {
+                    Toast.makeText(DirectoryActivity.this, "Please connect internet to view video.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnectedOrConnecting();
     }
 
     @Override
@@ -227,6 +237,7 @@ public class DirectoryActivity extends AppCompatActivity implements TextToSpeech
         super.onDestroy();
     }
 
+    // Set up Text To Speech
     @Override
     public void onInit(int status) {
         if (status == TextToSpeech.SUCCESS) {
@@ -245,6 +256,7 @@ public class DirectoryActivity extends AppCompatActivity implements TextToSpeech
         }
     }
 
+    // Detect image
     private void detectImage() {
         try {
             bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri));
@@ -258,11 +270,13 @@ public class DirectoryActivity extends AppCompatActivity implements TextToSpeech
         idGrid.setVisibility(idGrid.VISIBLE);
     }
 
+    // Open gallary to pick image
     private void openGallary() {
         Intent gallary = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(gallary, PICK_IMAGE);
     }
 
+    // After pick image successfully
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -279,6 +293,7 @@ public class DirectoryActivity extends AppCompatActivity implements TextToSpeech
         }
     }
 
+    // Init tensorflow and load model
     private void initTensorFlowAndLoadModel() {
         executor.execute(new Runnable() {
             @Override
